@@ -1,123 +1,348 @@
+import 'dart:io';
+import 'package:first_1_1/fullImage_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:first_1_1/patient/login_screen.dart';
+import 'package:first_1_1/patient/edit_profile_page.dart';
+import 'package:first_1_1/patient/medical_history_page.dart';
+import 'package:first_1_1/patient/payment_page.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:first_1_1/patient/setting_page.dart';
 
+class ProfileScreen extends StatefulWidget {
+  final String name;
+  final String email;
+  final dynamic image;
 
-class PatientProfilePage extends StatelessWidget {
-  const PatientProfilePage({super.key});
+  const ProfileScreen({
+    super.key,
+    required this.name,
+    required this.email,
+    required this.image,
+  });
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late String userName;
+  late String userEmail;
+  dynamic userImage;
+
+  @override
+  void initState() {
+    super.initState();
+    userName = widget.name;
+    userEmail = widget.email;
+    userImage = widget.image;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
 
-      // الشريط العلوي
-      appBar: AppBar(
-        title: Text("Patient Profile"),
-        backgroundColor: Color.fromARGB(255, 0, 71, 130),
-      ),
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-      // الـ Side Bar
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+    return Drawer(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
+      child: SafeArea(
+        child: Column(
           children: [
 
-            // رأس القائمة
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 0, 71, 130),
+            /// ================= HEADER =================
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(
+                top: 30,
+                bottom: 30,
               ),
 
-              accountName: Text(
-                "Ahmad Mohammad",
-                style: TextStyle(fontSize: 18),
-              ),
-
-              accountEmail: Text("ahmad@gmail.com"),
-
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.person,
-                  size: 50,
-                  color: Color.fromARGB(255, 0, 71, 130),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF0D2F58),
+                    Color(0xFF174A8B),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(40),
+                  bottomRight: Radius.circular(40),
                 ),
               ),
-            ),
 
-            // العناصر
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text("My Profile"),
-              onTap: () {},
-            ),
+              child: Column(
+                children: [
 
-            ListTile(
-              leading: Icon(Icons.calendar_month),
-              title: Text("Appointments"),
-              onTap: () {},
-            ),
+                  /// ================= IMAGE =================
+                  Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 15,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                    ),
 
-            ListTile(
-              leading: Icon(Icons.medical_services),
-              title: Text("Treatment Plan"),
-              onTap: () {},
-            ),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FullImageScreen(image: userImage),
+                          ),
+                        );
+                      },
 
-            ListTile(
-              leading: Icon(Icons.payment),
-              title: Text("Payments"),
-              onTap: () {},
-            ),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: userImage is File
+                            ? FileImage(userImage)
+                            : NetworkImage(userImage)
+                                as ImageProvider,
+                      ),
+                    ),
+                  ),
 
-            Divider(),
+                  const SizedBox(height: 15),
 
-            ListTile(
-              leading: Icon(Icons.logout, color: Colors.red),
-              title: Text(
-                "Logout",
-                style: TextStyle(color: Colors.red),
+                  Text(
+                    userName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  Text(
+                    userEmail,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                ],
               ),
-              onTap: () {},
+            ),
+
+            const SizedBox(height: 20),
+
+            /// ================= MENU =================
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                children: [
+
+                  ProfileItem(
+                    icon: Icons.edit,
+                    title: "Edit Profile",
+                    onTap: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfilePage(
+                            name: userName,
+                            email: userEmail,
+                            image: userImage,
+                          ),
+                        ),
+                      );
+
+                      if (result != null) {
+                        setState(() {
+                          userName = result["name"];
+                          userEmail = result["email"];
+                          userImage = result["image"];
+                        });
+                      }
+                    },
+                  ),
+
+                  ProfileItem(
+                    icon: Icons.medical_information,
+                    title: "Medical History",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const MedicalHistoryPage(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  ProfileItem(
+                    icon: Icons.payments,
+                    title: "Payments",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const PaymentsPage(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  ProfileItem(
+                    icon: Icons.settings,
+                    title: "Settings",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const SettingsPage(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  ProfileItem(
+                    icon: Icons.support_agent,
+                    title: "Contact Developers",
+                    onTap: () async {
+                      final Uri phoneUri = Uri(
+                        scheme: 'tel',
+                        path: '0958471390',
+                      );
+
+                      await launchUrl(phoneUri);
+                    },
+                  ),
+
+                  ProfileItem(
+                    icon: Icons.logout,
+                    title: "Logout",
+                    isLogout: true,
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const LoginScreen(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
 
-      // محتوى الصفحة
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+/// ================= PROFILE ITEM =================
+class ProfileItem extends StatefulWidget {
+  final IconData icon;
+  final String title;
+  final bool isLogout;
+  final VoidCallback? onTap;
 
-            CircleAvatar(
-              radius: 60,
-              backgroundColor: Color.fromARGB(255, 0, 71, 130),
-              child: Icon(
-                Icons.person,
-                size: 70,
-                color: Colors.white,
-              ),
-            ),
+  const ProfileItem({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.isLogout = false,
+    this.onTap,
+  });
 
-            SizedBox(height: 20),
+  @override
+  State<ProfileItem> createState() => _ProfileItemState();
+}
 
-            Text(
-              "Ahmad Mohammad",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+class _ProfileItemState extends State<ProfileItem> {
+  bool isPressed = false;
 
-            SizedBox(height: 10),
+  @override
+  Widget build(BuildContext context) {
 
-            Text(
-              "Patient ID: 1025",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
+    bool isDark =
+        Theme.of(context).brightness == Brightness.dark;
+
+    return GestureDetector(
+      onTap: widget.onTap,
+
+      onTapDown: (_) => setState(() => isPressed = true),
+      onTapUp: (_) => setState(() => isPressed = false),
+      onTapCancel: () => setState(() => isPressed = false),
+
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        margin: const EdgeInsets.only(bottom: 16),
+
+        transform: Matrix4.identity()
+          ..scale(isPressed ? 0.97 : 1.0),
+
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(22),
+
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 12,
+              offset: Offset(0, 5),
             ),
           ],
+        ),
+
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 6,
+          ),
+
+          leading: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0D2F58).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+
+            child: Icon(
+              widget.icon,
+              color: widget.isLogout
+                  ? Colors.red
+                  : const Color(0xFF0D2F58),
+              size: 20,
+            ),
+          ),
+
+          title: Text(
+            widget.title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+
+              color: widget.isLogout
+                  ? Colors.red
+                  : (isDark ? Colors.white : Colors.black87),
+            ),
+          ),
+
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: isDark ? Colors.white70 : Colors.grey,
+          ),
         ),
       ),
     );
