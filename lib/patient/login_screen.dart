@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:first_1_1/constants.dart';
-import 'package:first_1_1/patient/register_screen.dart';
-
+import 'package:project_1/constants.dart';
+import 'package:project_1/patient/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

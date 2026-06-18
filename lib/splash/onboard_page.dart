@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:first_1_1/splash/date_page.dart';
+import 'package:project_1/splash/date_page.dart';
 
 class OnboardPage extends StatelessWidget {
   const OnboardPage({super.key});
@@ -31,7 +31,6 @@ class OnboardPage extends StatelessWidget {
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 0, 71, 130),
-                  fontFamily: 'Pacifico',
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -43,7 +42,7 @@ class OnboardPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   color: Color.fromARGB(255, 24, 24, 24),
-                  fontFamily: 'Ubuntu',
+                  fontFamily: 'Arial',
                 ),
                 textAlign: TextAlign.center,
               ),

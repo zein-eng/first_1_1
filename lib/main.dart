@@ -1,85 +1,26 @@
+// <<<<<<< HEAD
 import 'package:flutter/material.dart';
-import 'package:first_1_1/patient/home_page.dart';
-
-
-
-ValueNotifier<ThemeMode> themeNotifier =
-    ValueNotifier(ThemeMode.light);
+import 'package:project_1/patient/login_screen.dart';
 
 void main() {
-
-  runApp(const MyApp());
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen()));
 }
+// =======
+// import 'package:clinic_1/log_in/Onboard_page.dart';
+// import 'package:flutter/material.dart';
 
-class MyApp extends StatelessWidget {
+// void main() {
+//   runApp( const MyApp());
+// }
 
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+//   @override
 
-  @override
-  Widget build(BuildContext context) {
+//   Widget build(BuildContext context) {
 
-    return ValueListenableBuilder(
-
-      valueListenable: themeNotifier,
-
-      builder: (
-          context,
-          ThemeMode currentMode,
-          child,
-          ) {
-
-        return MaterialApp(
-
-          debugShowCheckedModeBanner: false,
-
-
-          themeMode: currentMode,
-
-    
-
-          theme: ThemeData(
-
-            brightness: Brightness.light,
-
-            scaffoldBackgroundColor:
-            const Color(0xffF5F7FB),
-
-            appBarTheme: const AppBarTheme(
-
-              backgroundColor:
-              Color(0xFF0D2F58),
-
-              foregroundColor:
-              Colors.white,
-            ),
-          ),
-
-    
-
-          darkTheme: ThemeData(
-
-            brightness: Brightness.dark,
-
-            scaffoldBackgroundColor:
-            const Color(0xFF121212),
-
-            cardColor:
-            const Color(0xFF1E1E1E),
-
-            appBarTheme: const AppBarTheme(
-
-              backgroundColor:
-              Colors.black,
-
-              foregroundColor:
-              Colors.white,
-            ),
-          ),
-
-          home: const HomePage(),
-        );
-      },
-    );
-  }
-}
-
+//     return  MaterialApp(
+//       home:OnboardPage(),
+//     );
+//     }}
+// >>>>>>> ddf9496c90cf7ceb0219d14fdde00cd9b45a6649 

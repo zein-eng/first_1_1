@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:first_1_1/splash/case_page.dart';
+import 'package:project_1/splash/case_page.dart';
 
 class Datepage extends StatelessWidget {
   const Datepage({super.key});
@@ -35,7 +35,6 @@ class Datepage extends StatelessWidget {
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 0, 71, 130),
-                  fontFamily: 'Pacifico',
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -47,57 +46,32 @@ class Datepage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   color: Color.fromARGB(255, 24, 24, 24),
-                  fontFamily: 'Ubuntu',
+                  fontFamily: 'Arial',
                 ),
                 textAlign: TextAlign.center,
               ),
 
               SizedBox(height: 40),
 
-              Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-
-    ElevatedButton(
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor:Color.fromARGB(255, 0, 71, 130),
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      child: Text(
-        'Previous',
-        style: TextStyle(color: Colors.white, fontSize: 16),
-      ),
-    ),
-
-    SizedBox(width: 20),
-
-    ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Casepage()),
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 0, 71, 130),
-        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-      child: Text(
-        '  Next    ',
-        style: TextStyle(color: Colors.white, fontSize: 16),
-      ),
-    ),
-  ],
-),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Casepage()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 0, 71, 130),
+                  padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Next',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
             ],
           ),
         ),
