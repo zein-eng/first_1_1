@@ -1,3 +1,4 @@
+import 'package:first_1_1/patient/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class Casepage extends StatelessWidget {
@@ -52,7 +53,12 @@ class Casepage extends StatelessWidget {
               SizedBox(height: 40),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(255, 0, 71, 130),
                   padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),

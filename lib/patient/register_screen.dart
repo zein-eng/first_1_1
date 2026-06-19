@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'homepage_screen.dart'; 
+import 'homepage_screen.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -21,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
   DateTime? _selectedDate;
-  bool _isLoading = false; 
+  bool _isLoading = false;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -41,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
-        _isLoading = true; 
+        _isLoading = true;
       });
 
       try {
@@ -60,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } finally {
         if (mounted) {
           setState(() {
-            _isLoading = false; 
+            _isLoading = false;
           });
         }
       }
@@ -80,7 +81,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     const Color primaryBlue = Color(0xff1565FF);
-    // جلب أبعاد الشاشة لجعل التصميم متجاوباً
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -101,18 +101,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SafeArea(
                 bottom: false,
                 child: SizedBox(
-                  height: screenSize.height * 0.32, 
+                  height: screenSize.height * 0.32,
                   width: double.infinity,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
                         'assets/iconwhite.png',
-                        height: screenSize.height * 0.16, 
+                        height: screenSize.height * 0.16,
                         fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.broken_image, color: Colors.white, size: 65);
-                        },
                       ),
                       const SizedBox(height: 8),
                       RichText(
@@ -132,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              
+
               Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -145,7 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(45),
                           topRight: Radius.circular(45),
-                          bottomLeft: Radius.circular(30), 
+                          bottomLeft: Radius.circular(30),
                           bottomRight: Radius.circular(30),
                         ),
                       ),
@@ -166,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               style: TextStyle(fontSize: 13, color: Color(0xff848496), fontWeight: FontWeight.w500),
                             ),
                             const SizedBox(height: 30),
-                            
+
                             buildField("Full Name", Icons.person_outline, controller: _nameController),
                             const SizedBox(height: 15),
                             buildField("Email Address", Icons.email_outlined, controller: _emailController),
@@ -203,7 +200,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             const SizedBox(height: 35),
 
-                            // زر إنشاء الحساب
                             Container(
                               width: double.infinity,
                               height: 56,
@@ -212,13 +208,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 gradient: const LinearGradient(
                                   colors: [Color(0xff1565FF), Color(0xff003D99)],
                                 ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color(0x4D1565FF),
-                                    blurRadius: 10,
-                                    offset: Offset(0, 5),
-                                  ),
-                                ],
                               ),
                               child: Material(
                                 color: Colors.transparent,
@@ -226,46 +215,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   onTap: _isLoading ? null : _register,
                                   borderRadius: BorderRadius.circular(15),
                                   child: Center(
-                                    child: _isLoading 
-                                      ? const SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-                                        )
-                                      : const Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Create Account",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
+                                    child: _isLoading
+                                        ? const SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                                          )
+                                        : const Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Create Account",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Icon(
-                                              Icons.arrow_forward_rounded,
-                                              color: Colors.white,
-                                              size: 22,
-                                            ),
-                                          ],
-                                        ),
+                                              SizedBox(width: 10),
+                                              Icon(
+                                                Icons.arrow_forward_rounded,
+                                                color: Colors.white,
+                                                size: 22,
+                                              ),
+                                            ],
+                                          ),
                                   ),
                                 ),
                               ),
                             ),
-                            
+
                             const SizedBox(height: 25),
-                            const Text(
-                              "Already have an account? Sign In",
-                              style: TextStyle(color: Colors.grey, fontSize: 14),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Already have an account? ",
+                                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                    );
+                                  },
+                                  child: const Text(
+                                    "Sign In",
+                                    style: TextStyle(
+                                      color: Color(0xff1565FF),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
                     ),
                   ),
+
                   Positioned(
                     top: -15,
                     left: 0,
@@ -277,7 +289,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
-                          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 5))],
                         ),
                         padding: const EdgeInsets.all(1.2),
                         child: Container(
@@ -300,7 +311,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget buildField(String hint, IconData icon, {
-    bool obscom = false, 
+    bool obscom = false,
     TextEditingController? controller,
     bool readOnly = false,
     VoidCallback? onIconPressed,
@@ -313,7 +324,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       readOnly: readOnly,
       onTap: isDatePicker ? onIconPressed : null,
       keyboardType: hint == "Email Address" ? TextInputType.emailAddress : TextInputType.text,
-      style: const TextStyle(fontSize: 15),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return "This field is required";
@@ -333,24 +343,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.grey, fontSize: 13),
-        prefixIcon: Icon(icon, color: const Color(0xff0D2F58), size: 20),
+        prefixIcon: Icon(icon, color: const Color(0xff0D2F58)),
         suffixIcon: isPasswordField
             ? IconButton(
-                icon: Icon(obscom ? Icons.visibility_off : Icons.visibility, color: Colors.black26, size: 20),
+                icon: Icon(obscom ? Icons.visibility_off : Icons.visibility),
                 onPressed: onIconPressed,
               )
             : isDatePicker
-                ? const Icon(Icons.calendar_month, color: Colors.black26, size: 18)
+                ? const Icon(Icons.calendar_month)
                 : null,
         filled: true,
         fillColor: const Color(0xffF8FAFD),
-        contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16), 
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xffF1F3F6))),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xff1565FF), width: 1.5)),
-        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.red, width: 1)),
-        focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.red, width: 1.5)),
       ),
     );
   }

@@ -1,9 +1,9 @@
 // <<<<<<< HEAD
 import 'package:flutter/material.dart';
-import 'package:project_1/patient/login_screen.dart';
+import 'package:first_1_1/splash/onboard_page.dart';
 
 void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen()));
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: OnboardPage()));
 }
 // =======
 // import 'package:clinic_1/log_in/Onboard_page.dart';

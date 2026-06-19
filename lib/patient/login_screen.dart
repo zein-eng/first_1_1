@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:project_1/constants.dart';
-import 'package:project_1/patient/register_screen.dart';
+import 'package:first_1_1/constants.dart';
+import 'package:first_1_1/patient/register_screen.dart';
+import 'package:first_1_1/patient/homepage_Screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,19 +16,19 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   void _login() async {
     setState(() {
       isLoading = true;
     });
+
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text("Missing information"),
-            content: Text(
-              "please make sure that you have filled all the fields",
-            ),
+            content: Text("please make sure that you have filled all the fields"),
             actions: [
               TextButton(
                 onPressed: () {
@@ -39,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         },
       );
+
       setState(() {
         isLoading = false;
       });
@@ -52,13 +54,18 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response.statusCode == 200) {
-        // Handle successful login
         print('Login successful: ${response.data}');
         setState(() {
           isLoading = false;
         });
+
+        // ⬅️ الانتقال لصفحة الـ Home
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+
       } else {
-        // Handle login error
         print('Login failed: ${response.statusCode}');
         setState(() {
           isLoading = false;
@@ -73,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         SafeArea(
           child: Scaffold(
-            backgroundColor: Constants.appColor, // Deep blue background
+            backgroundColor: Constants.appColor,
 
             body: Column(
               children: [
@@ -90,7 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                // White bottom container
                 Expanded(
                   child: Container(
                     width: double.infinity,
@@ -112,7 +118,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           const SizedBox(height: 10),
 
-                          // Welcome text
                           const Text(
                             "Welcome Back",
                             style: TextStyle(
@@ -131,7 +136,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           const SizedBox(height: 25),
 
-                          // Email field
                           TextField(
                             controller: _emailController,
                             decoration: InputDecoration(
@@ -148,7 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           const SizedBox(height: 20),
 
-                          // Password field with eye icon
                           TextField(
                             controller: _passwordController,
                             obscureText: _obscurePassword,
@@ -191,7 +194,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           const SizedBox(height: 10),
 
-                          // Sign In button
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -228,7 +230,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           const SizedBox(height: 20),
 
-                          // Continue as Guest button
                           SizedBox(
                             width: double.infinity,
                             child: OutlinedButton(
@@ -264,7 +265,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: TextStyle(color: Colors.grey),
                               ),
                               TextButton(
-                                onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterScreen()));},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => RegisterScreen(),
+                                    ),
+                                  );
+                                },
                                 child: const Text(
                                   "Sign Up",
                                   style: TextStyle(

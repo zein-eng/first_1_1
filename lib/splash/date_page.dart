@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:project_1/splash/case_page.dart';
+import 'package:first_1_1/splash/case_page.dart';
 
 class Datepage extends StatelessWidget {
   const Datepage({super.key});

@@ -49,7 +49,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
 
-            /// ================= HEADER =================
             Container(
               width: double.infinity,
               padding: const EdgeInsets.only(
@@ -75,7 +74,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
 
-                  /// ================= IMAGE =================
                   Container(
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
@@ -136,8 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             const SizedBox(height: 20),
-
-            /// ================= MENU =================
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -249,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-/// ================= PROFILE ITEM =================
+
 class ProfileItem extends StatefulWidget {
   final IconData icon;
   final String title;
