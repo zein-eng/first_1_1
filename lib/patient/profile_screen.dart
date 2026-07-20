@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:first_1_1/fullImage_screen.dart';
+import 'package:project_11/fullImage_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:first_1_1/patient/login_screen.dart';
-import 'package:first_1_1/patient/edit_profile_page.dart';
-import 'package:first_1_1/patient/medical_history_page.dart';
-import 'package:first_1_1/patient/payment_page.dart';
+import 'package:project_11/patient/login_screen.dart';
+import 'package:project_11/patient/edit_profile_page.dart';
+import 'package:project_11/patient/medical_history_page.dart';
+import 'package:project_11/patient/payment_page.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:first_1_1/patient/setting_page.dart';
+import 'package:project_11/patient/setting_page.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String name;
@@ -39,7 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Drawer(
@@ -48,20 +47,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: SafeArea(
         child: Column(
           children: [
-
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(
-                top: 30,
-                bottom: 30,
-              ),
+              padding: const EdgeInsets.only(top: 30, bottom: 30),
 
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF0D2F58),
-                    Color(0xFF174A8B),
-                  ],
+                  colors: [Color(0xFF0D2F58), Color(0xFF174A8B)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -73,7 +65,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               child: Column(
                 children: [
-
                   Container(
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
@@ -101,8 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         radius: 50,
                         backgroundImage: userImage is File
                             ? FileImage(userImage)
-                            : NetworkImage(userImage)
-                                as ImageProvider,
+                            : NetworkImage(userImage) as ImageProvider,
                       ),
                     ),
                   ),
@@ -122,10 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   Text(
                     userEmail,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(color: Colors.white70, fontSize: 16),
                   ),
 
                   const SizedBox(height: 20),
@@ -138,7 +125,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
-
                   ProfileItem(
                     icon: Icons.edit,
                     title: "Edit Profile",
@@ -171,8 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const MedicalHistoryPage(),
+                          builder: (context) => const MedicalHistoryPage(),
                         ),
                       );
                     },
@@ -185,8 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const PaymentsPage(),
+                          builder: (context) => const PaymentsPage(),
                         ),
                       );
                     },
@@ -199,8 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const SettingsPage(),
+                          builder: (context) => const SettingsPage(),
                         ),
                       );
                     },
@@ -227,8 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const LoginScreen(),
+                          builder: (context) => const LoginScreen(),
                         ),
                       );
                     },
@@ -244,7 +226,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
 
 class ProfileItem extends StatefulWidget {
   final IconData icon;
@@ -269,9 +250,7 @@ class _ProfileItemState extends State<ProfileItem> {
 
   @override
   Widget build(BuildContext context) {
-
-    bool isDark =
-        Theme.of(context).brightness == Brightness.dark;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -284,8 +263,7 @@ class _ProfileItemState extends State<ProfileItem> {
         duration: const Duration(milliseconds: 150),
         margin: const EdgeInsets.only(bottom: 16),
 
-        transform: Matrix4.identity()
-          ..scale(isPressed ? 0.97 : 1.0),
+        transform: Matrix4.identity()..scale(isPressed ? 0.97 : 1.0),
 
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
@@ -315,9 +293,7 @@ class _ProfileItemState extends State<ProfileItem> {
 
             child: Icon(
               widget.icon,
-              color: widget.isLogout
-                  ? Colors.red
-                  : const Color(0xFF0D2F58),
+              color: widget.isLogout ? Colors.red : const Color(0xFF0D2F58),
               size: 20,
             ),
           ),

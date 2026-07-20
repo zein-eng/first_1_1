@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:first_1_1/patient/profile_screen.dart';
+import 'package:project_11/patient/profile_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,12 +9,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -32,18 +30,13 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-
             // ================= TOP BAR =================
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 15,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
 
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
                   // العنوان
                   Text(
                     "Home",
@@ -52,18 +45,14 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold,
 
                       // ✅ بدل اللون الثابت
-                      color: isDark
-                          ? Colors.white
-                          : const Color(0xFF0D2F58),
+                      color: isDark ? Colors.white : const Color(0xFF0D2F58),
                     ),
                   ),
 
                   // زر القائمة
                   Container(
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.black54
-                          : Colors.white,
+                      color: isDark ? Colors.black54 : Colors.white,
 
                       borderRadius: BorderRadius.circular(15),
 
@@ -80,14 +69,11 @@ class _HomePageState extends State<HomePage> {
                       icon: Icon(
                         Icons.menu,
                         size: 30,
-                        color: isDark
-                            ? Colors.white
-                            : const Color(0xFF0D2F58),
+                        color: isDark ? Colors.white : const Color(0xFF0D2F58),
                       ),
 
                       onPressed: () {
-                        _scaffoldKey.currentState!
-                            .openEndDrawer();
+                        _scaffoldKey.currentState!.openEndDrawer();
                       },
                     ),
                   ),
@@ -104,9 +90,7 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
 
-                    color: isDark
-                        ? Colors.white
-                        : const Color(0xFF0D2F58),
+                    color: isDark ? Colors.white : const Color(0xFF0D2F58),
                   ),
                 ),
               ),

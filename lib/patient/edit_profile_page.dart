@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:first_1_1/fullImage_screen.dart';
+import 'package:project_11/fullImage_screen.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String name;
@@ -16,31 +16,24 @@ class EditProfilePage extends StatefulWidget {
   });
 
   @override
-  State<EditProfilePage> createState() =>
-      _EditProfilePageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final GlobalKey<FormState> formKey =
-      GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final TextEditingController nameController =
-      TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
-  final TextEditingController emailController =
-      TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController passwordController =
-      TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  final TextEditingController phoneController =
-      TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
-  final TextEditingController birthController =
-      TextEditingController();
+  final TextEditingController birthController = TextEditingController();
 
   File? profileImage;
 
@@ -58,8 +51,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> pickImage() async {
-    final pickedImage =
-        await ImagePicker().pickImage(
+    final pickedImage = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
 
@@ -71,8 +63,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> selectDate() async {
-    DateTime? pickedDate =
-        await showDatePicker(
+    DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime(2000),
       firstDate: DateTime(1950),
@@ -91,9 +82,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (formKey.currentState!.validate()) {
       setState(() => isLoading = true);
 
-      await Future.delayed(
-        const Duration(seconds: 2),
-      );
+      await Future.delayed(const Duration(seconds: 2));
 
       setState(() => isLoading = false);
 
@@ -101,19 +90,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            "Profile Updated Successfully",
-          ),
-          backgroundColor:
-              Color(0xFF0D2F58),
+          content: Text("Profile Updated Successfully"),
+          backgroundColor: Color(0xFF0D2F58),
         ),
       );
 
       Navigator.pop(context, {
         "name": nameController.text,
         "email": emailController.text,
-        "image":
-            profileImage ?? widget.image,
+        "image": profileImage ?? widget.image,
       });
     }
   }
@@ -126,55 +111,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return InputDecoration(
       filled: true,
 
-      fillColor:
-          Theme.of(context).cardColor,
+      fillColor: Theme.of(context).cardColor,
 
       labelText: text,
 
-      prefixIcon: Icon(
-        icon,
-        color: const Color(0xFF0D2F58),
-      ),
+      prefixIcon: Icon(icon, color: const Color(0xFF0D2F58)),
 
       suffixIcon: suffixIcon,
 
       enabledBorder: OutlineInputBorder(
-        borderRadius:
-            BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18),
 
-        borderSide: BorderSide(
-          color: Colors.grey.shade400,
-        ),
+        borderSide: BorderSide(color: Colors.grey.shade400),
       ),
 
       focusedBorder: OutlineInputBorder(
-        borderRadius:
-            BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18),
 
-        borderSide: const BorderSide(
-          color: Color(0xFF0D2F58),
-          width: 2,
-        ),
+        borderSide: const BorderSide(color: Color(0xFF0D2F58), width: 2),
       ),
 
       errorBorder: OutlineInputBorder(
-        borderRadius:
-            BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(18),
 
-        borderSide: const BorderSide(
-          color: Colors.red,
-        ),
+        borderSide: const BorderSide(color: Colors.red),
       ),
 
-      focusedErrorBorder:
-          OutlineInputBorder(
-        borderRadius:
-            BorderRadius.circular(18),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
 
-        borderSide: const BorderSide(
-          color: Colors.red,
-          width: 2,
-        ),
+        borderSide: const BorderSide(color: Colors.red, width: 2),
       ),
     );
   }
@@ -182,19 +148,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Theme.of(context)
-              .scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: AppBar(
-        backgroundColor:
-            const Color(0xFF0D2F58),
+        backgroundColor: const Color(0xFF0D2F58),
 
         centerTitle: true,
 
-        title: const Text(
-          "Edit Profile",
-        ),
+        title: const Text("Edit Profile"),
       ),
 
       body: SingleChildScrollView(
@@ -215,9 +176,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       shape: BoxShape.circle,
 
                       border: Border.all(
-                        color: const Color(
-                          0xFF0D2F58,
-                        ),
+                        color: const Color(0xFF0D2F58),
                         width: 3,
                       ),
                     ),
@@ -228,13 +187,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           context,
 
                           MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    FullImageScreen(
-                              image:
-                                  profileImage ??
-                                      widget
-                                          .image,
+                            builder: (context) => FullImageScreen(
+                              image: profileImage ?? widget.image,
                             ),
                           ),
                         );
@@ -243,45 +197,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       child: CircleAvatar(
                         radius: 60,
 
-                        backgroundColor:
-                            Theme.of(
-                              context,
-                            ).cardColor,
+                        backgroundColor: Theme.of(context).cardColor,
 
-                        backgroundImage:
-                            profileImage !=
-                                    null
-                                ? FileImage(
-                                    profileImage!,
-                                  )
-                                : widget.image
-                                        is File
-                                    ? FileImage(
-                                        widget
-                                            .image,
-                                      )
-                                    : widget.image !=
-                                            null
-                                        ? NetworkImage(
-                                            widget
-                                                .image,
-                                          )
-                                        : null,
+                        backgroundImage: profileImage != null
+                            ? FileImage(profileImage!)
+                            : widget.image is File
+                            ? FileImage(widget.image)
+                            : widget.image != null
+                            ? NetworkImage(widget.image)
+                            : null,
 
-                        child:
-                            profileImage ==
-                                        null &&
-                                    widget
-                                            .image ==
-                                        null
-                                ? const Icon(
-                                    Icons.person,
-                                    size: 60,
-                                    color:
-                                        Colors
-                                            .grey,
-                                  )
-                                : null,
+                        child: profileImage == null && widget.image == null
+                            ? const Icon(
+                                Icons.person,
+                                size: 60,
+                                color: Colors.grey,
+                              )
+                            : null,
                       ),
                     ),
                   ),
@@ -294,24 +226,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       onTap: pickImage,
 
                       child: Container(
-                        padding:
-                            const EdgeInsets.all(
-                          10,
-                        ),
+                        padding: const EdgeInsets.all(10),
 
-                        decoration:
-                            const BoxDecoration(
-                          color: Color(
-                            0xFF0D2F58,
-                          ),
-                          shape:
-                              BoxShape.circle,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF0D2F58),
+                          shape: BoxShape.circle,
                         ),
 
                         child: const Icon(
                           Icons.camera_alt,
-                          color:
-                              Colors.white,
+                          color: Colors.white,
                           size: 20,
                         ),
                       ),
@@ -327,18 +251,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 controller: nameController,
 
                 validator: (value) {
-                  if (value == null ||
-                      value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Please enter name";
                   }
 
                   return null;
                 },
 
-                decoration: customDecoration(
-                  text: "Name",
-                  icon: Icons.person,
-                ),
+                decoration: customDecoration(text: "Name", icon: Icons.person),
               ),
 
               const SizedBox(height: 20),
@@ -347,12 +267,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextFormField(
                 controller: emailController,
 
-                keyboardType:
-                    TextInputType.emailAddress,
+                keyboardType: TextInputType.emailAddress,
 
                 validator: (value) {
-                  if (value == null ||
-                      value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Please enter email";
                   }
 
@@ -363,25 +281,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   return null;
                 },
 
-                decoration: customDecoration(
-                  text: "Email",
-                  icon: Icons.email,
-                ),
+                decoration: customDecoration(text: "Email", icon: Icons.email),
               ),
 
               const SizedBox(height: 20),
 
               /// ================= PASSWORD =================
               TextFormField(
-                controller:
-                    passwordController,
+                controller: passwordController,
 
-                obscureText:
-                    obscurePassword,
+                obscureText: obscurePassword,
 
                 validator: (value) {
-                  if (value == null ||
-                      value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Please enter password";
                   }
 
@@ -399,21 +311,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
-                        obscurePassword =
-                            !obscurePassword;
+                        obscurePassword = !obscurePassword;
                       });
                     },
 
                     icon: Icon(
-                      obscurePassword
-                          ? Icons
-                              .visibility_off
-                          : Icons.visibility,
+                      obscurePassword ? Icons.visibility_off : Icons.visibility,
 
-                      color:
-                          const Color(
-                        0xFF0D2F58,
-                      ),
+                      color: const Color(0xFF0D2F58),
                     ),
                   ),
                 ),
@@ -423,21 +328,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
               /// ================= CONFIRM PASSWORD =================
               TextFormField(
-                controller:
-                    confirmPasswordController,
+                controller: confirmPasswordController,
 
-                obscureText:
-                    obscureConfirmPassword,
+                obscureText: obscureConfirmPassword,
 
                 validator: (value) {
-                  if (value == null ||
-                      value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Please confirm password";
                   }
 
-                  if (value !=
-                      passwordController
-                          .text) {
+                  if (value != passwordController.text) {
                     return "Passwords do not match";
                   }
 
@@ -446,27 +346,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                 decoration: customDecoration(
                   text: "Confirm Password",
-                  icon:
-                      Icons.lock_outline,
+                  icon: Icons.lock_outline,
 
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
-                        obscureConfirmPassword =
-                            !obscureConfirmPassword;
+                        obscureConfirmPassword = !obscureConfirmPassword;
                       });
                     },
 
                     icon: Icon(
                       obscureConfirmPassword
-                          ? Icons
-                              .visibility_off
+                          ? Icons.visibility_off
                           : Icons.visibility,
 
-                      color:
-                          const Color(
-                        0xFF0D2F58,
-                      ),
+                      color: const Color(0xFF0D2F58),
                     ),
                   ),
                 ),
@@ -478,8 +372,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextFormField(
                 controller: phoneController,
 
-                keyboardType:
-                    TextInputType.phone,
+                keyboardType: TextInputType.phone,
 
                 decoration: customDecoration(
                   text: "Phone Number",
@@ -499,8 +392,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
                 decoration: customDecoration(
                   text: "Birth Date",
-                  icon:
-                      Icons.calendar_month,
+                  icon: Icons.calendar_month,
                 ),
               ),
 
@@ -512,45 +404,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 height: 58,
 
                 child: ElevatedButton(
-                  onPressed:
-                      isLoading
-                          ? null
-                          : saveChanges,
+                  onPressed: isLoading ? null : saveChanges,
 
-                  style:
-                      ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(
-                      0xFF0D2F58,
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0D2F58),
 
-                    shape:
-                        RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(
-                        18,
-                      ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
                     ),
                   ),
 
-                  child:
-                      isLoading
-                          ? const CircularProgressIndicator(
-                              color:
-                                  Colors.white,
-                            )
-                          : const Text(
-                              "Save Changes",
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Save Changes",
 
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight:
-                                    FontWeight
-                                        .bold,
-                                color:
-                                    Colors.white,
-                              ),
-                            ),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
             ],

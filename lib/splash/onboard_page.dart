@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:first_1_1/splash/date_page.dart';
+import 'package:project_11/splash/date_page.dart';
 
 class OnboardPage extends StatelessWidget {
   const OnboardPage({super.key});

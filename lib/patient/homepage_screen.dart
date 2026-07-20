@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:first_1_1/patient/diagnostic_appointment.dart';
-import 'package:first_1_1/patient/doctor_profile/doctor_profile_screen.dart';
-import 'package:first_1_1/patient/profile_screen.dart';
+import 'package:project_11/patient/diagnostic_appointment.dart';
+import 'package:project_11/patient/doctor_profile/doctor_profile_screen.dart';
+import 'package:project_11/patient/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -95,13 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
     const Color accentBlue = Color(0xff1565FF);
 
     return Scaffold(
-       key: _scaffoldKey,
+      key: _scaffoldKey,
       backgroundColor: const Color(0xffFAFAFA),
       endDrawer: ProfileScreen(
-  name: "Alabdeen",
-  email: "alabdeen@gmail.com",
-  image: "assets/profile.png",
-),
+        name: "Alabdeen",
+        email: "alabdeen@gmail.com",
+        image: "assets/profile.png",
+      ),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75.0),
         child: AppBar(
@@ -153,36 +153,36 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           actions: [
-  Padding(
-    padding: const EdgeInsets.only(right: 16.0, top: 16.0),
-    child: GestureDetector(
-      onTap: () {
-        _scaffoldKey.currentState!.openEndDrawer();
-      },
-      child: Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: Colors.white24,
-            child: ClipOval(
-              child: Image.asset(
-                'assets/profile.png',
-                fit: BoxFit.cover,
-                errorBuilder: (c, e, s) =>
-                    const Icon(Icons.person, color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0, top: 16.0),
+              child: GestureDetector(
+                onTap: () {
+                  _scaffoldKey.currentState!.openEndDrawer();
+                },
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Colors.white24,
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/profile.png',
+                          fit: BoxFit.cover,
+                          errorBuilder: (c, e, s) =>
+                              const Icon(Icons.person, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const CircleAvatar(
+                      radius: 5.5,
+                      backgroundColor: Colors.green,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          const CircleAvatar(
-            radius: 5.5,
-            backgroundColor: Colors.green,
-          ),
-        ],
-      ),
-    ),
-  ),
-],
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -256,15 +256,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
-         onTap: (index) {
-  if (index == 3) {
-    _scaffoldKey.currentState!.openEndDrawer();
-  } else {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-},
+          onTap: (index) {
+            if (index == 3) {
+              _scaffoldKey.currentState!.openEndDrawer();
+            } else {
+              setState(() {
+                _currentIndex = index;
+              });
+            }
+          },
           type: BottomNavigationBarType.fixed,
           backgroundColor: darkNavy,
           selectedItemColor: accentBlue,

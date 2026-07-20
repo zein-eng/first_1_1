@@ -1,27 +1,15 @@
-// <<<<<<< HEAD
 import 'package:flutter/material.dart';
-import 'package:first_1_1/splash/onboard_page.dart';
-import 'package:first_1_1/patient/login_screen.dart';
+import 'package:project_11/doctor/dental_chart_screen.dart';
+import 'package:project_11/patient/login_screen.dart';
+import 'package:project_11/splash/onboard_page.dart';
 
-void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen()));
-}
-// =======
-// import 'package:clinic_1/log_in/Onboard_page.dart';
-// import 'package:flutter/material.dart';
-
-// void main() {
-//   runApp( const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//   @override
-
-//   Widget build(BuildContext context) {
-
-//     return  MaterialApp(
-//       home:OnboardPage(),
-//     );
-//     }}
-// >>>>>>> ddf9496c90cf7ceb0219d14fdde00cd9b45a6649 
+void main() => runApp(
+  MaterialApp(
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      fontFamily: "Roboto",
+      scaffoldBackgroundColor: const Color(0xFF0D1B3D),
+    ),
+    home: LoginScreen(),
+  ),
+);
