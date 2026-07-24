@@ -12,6 +12,25 @@ class Constants {
   static String token = '';
   static Dio dio = Dio();
 
+  /// الصور القادمة من الباك اند (زي profile_image) بترجع كمسار نسبي
+  /// من مجلد storage، مثلاً "profiles/xxx.jpg" - هاي الدالة
+  /// بتبني الرابط الكامل: http://<السيرفر>/storage/profiles/xxx.jpg
+  static String get storageBaseUrl {
+    final uri = Uri.parse(baseUrl);
+    return '${uri.scheme}://${uri.authority}/storage/';
+  }
+
+  /// بتاخد أي قيمة صورة راجعة من السيرفر وترجع رابط كامل قابل للعرض.
+  /// إذا كانت أصلاً رابط كامل (http/https) بترجعها متل ما هي.
+  static String resolveImageUrl(String path) {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    // بنشيل أي / زيادة بالبداية عشان ما يصير سلاش مزدوج
+    final cleanPath = path.startsWith('/') ? path.substring(1) : path;
+    return '$storageBaseUrl$cleanPath';
+  }
+
   static const String _tokenKey = 'auth_token';
   static Future<void> saveToken(String newToken) async {
     token = newToken;

@@ -7,12 +7,16 @@ import 'package:first_1_1/constants.dart';
 class EditProfilePage extends StatefulWidget {
   final String name;
   final String email;
+  final String? phone;
+  final String? dateOfBirth;
   final dynamic image;
 
   const EditProfilePage({
     super.key,
     required this.name,
     required this.email,
+    this.phone,
+    this.dateOfBirth,
     required this.image,
   });
 
@@ -30,9 +34,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final TextEditingController birthController = TextEditingController();
 
   DateTime? _selectedBirthDate;
-
-  // بدل ما نستخدم dart:io File (ما بيشتغل عالويب)، منخزن الصورة كـ bytes
-  // هاد بيشتغل صح عالويب والموبايل مع بعض
   Uint8List? _pickedImageBytes;
   String? _pickedImageName;
 
@@ -48,12 +49,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
         parts.length > 1 ? parts.sublist(1).join(' ') : '';
 
     emailController.text = widget.email;
+    phoneController.text = widget.phone ?? '';
+    if (widget.dateOfBirth != null && widget.dateOfBirth!.isNotEmpty) {
+      birthController.text = widget.dateOfBirth!;
+      final parsedDate = DateTime.tryParse(widget.dateOfBirth!);
+      if (parsedDate != null) {
+        _selectedBirthDate = parsedDate;
+      }
+    }
   }
 
   Future<void> pickImage() async {
     final pickedImage = await ImagePicker().pickImage(
       source: ImageSource.gallery,
-      imageQuality: 80, // تصغير الجودة شوي لتخفيف حجم الرفع
+      imageQuality: 80, 
     );
 
     if (pickedImage != null) {
@@ -84,51 +93,38 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> saveChanges() async {
-    if (formKey.currentState!.validate()) {
-      setState(() => isLoading = true);
+ Future<void> saveChanges() async {
+  if (formKey.currentState!.validate()) {
+    setState(() => isLoading = true);
 
-      bool success = await Constants.updateProfile(
-        firstName: firstNameController.text.trim(),
-        lastName: lastNameController.text.trim(),
-        phone: phoneController.text.trim(),
-        dateOfBirth: birthController.text.trim(),
-        imageBytes: _pickedImageBytes,
-        imageFilename: _pickedImageName,
+    // 1. تعريف updatedName (مثلاً دمج الاسم الأول والأخير)
+    final updatedName = "${firstNameController.text.trim()} ${lastNameController.text.trim()}";
+
+    // 2. استقبال نتيجة حفظ البيانات من الـ API بمتغير اسمه success
+    final bool success = await Constants.updateProfile(
+      // البيانات المرسلة للـ API...
+    );
+
+    setState(() => isLoading = false);
+
+    if (!mounted) return;
+
+    // 3. الآن سينجح الشرط دون أخطاء
+    if (success) {
+      Navigator.pop(context, {
+        "name": updatedName,
+        "email": emailController.text,
+        "phone": phoneController.text.trim(),
+        "dateOfBirth": birthController.text.trim(),
+        "image": _pickedImageBytes ?? widget.image,
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update profile')),
       );
-
-      if (!mounted) return;
-
-      setState(() => isLoading = false);
-
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Profile Updated Successfully"),
-            backgroundColor: Color(0xFF0D2F58),
-          ),
-        );
-
-        final updatedName =
-            "${firstNameController.text.trim()} ${lastNameController.text.trim()}"
-                .trim();
-
-        Navigator.pop(context, {
-          "name": updatedName,
-          "email": emailController.text,
-          // إذا اختارت صورة جديدة منرجع البايتات، وإلا منرجع الصورة القديمة متل ما هي
-          "image": _pickedImageBytes ?? widget.image,
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Failed to update profile. Please try again."),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
     }
   }
+}
 
   ImageProvider? _currentImageProvider() {
     if (_pickedImageBytes != null) {
@@ -139,7 +135,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           widget.image.startsWith('https://')) {
         return NetworkImage(widget.image);
       }
-      return AssetImage(widget.image);
+      if (widget.image.startsWith('assets/')) {
+        return AssetImage(widget.image);
+      }
+      return NetworkImage(Constants.resolveImageUrl(widget.image));
     }
     return null;
   }

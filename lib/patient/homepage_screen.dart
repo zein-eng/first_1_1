@@ -90,28 +90,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadUserProfile() async {
     final profileData = await Constants.getProfile();
     if (profileData != null && mounted) {
+      // شكل الرد الحقيقي: { success, data: { user: {...}, patient_id, date_of_birth } }
       final data = profileData['data'] ?? profileData;
+      final user = data['user'] ?? data;
 
-      final firstName = data['first_name']?.toString().trim() ?? '';
-      final lastName = data['last_name']?.toString().trim() ?? '';
+      final firstName = user['first_name']?.toString().trim() ?? '';
+      final lastName = user['last_name']?.toString().trim() ?? '';
       final combinedName = [
         firstName,
         lastName,
       ].where((s) => s.isNotEmpty).join(' ');
 
       setState(() {
-        if (data['name'] != null &&
-            data['name'].toString().trim().isNotEmpty) {
-          _userName = data['name'];
+        if (user['name'] != null &&
+            user['name'].toString().trim().isNotEmpty) {
+          _userName = user['name'];
         } else if (combinedName.isNotEmpty) {
           _userName = combinedName;
         }
 
-        _userEmail = data['email'] ?? _userEmail;
-        _userImage = data['image'] ??
-            data['photo'] ??
-            data['avatar'] ??
-            data['profile_image'] ??
+        _userEmail = user['email'] ?? _userEmail;
+        _userImage = user['image'] ??
+            user['photo'] ??
+            user['avatar'] ??
+            user['profile_image'] ??
             _userImage;
       });
     }

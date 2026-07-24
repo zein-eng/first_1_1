@@ -29,6 +29,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late String userName;
   late String userEmail;
+  String userPhone = '';
+  String userDateOfBirth = '';
   dynamic userImage;
   bool isLoggingOut = false;
   bool isLoadingData = true;
@@ -48,30 +50,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (profileData != null && mounted) {
       setState(() {
+        // شكل الرد الحقيقي: { success, data: { user: {...}, patient_id, date_of_birth } }
         final data = profileData['data'] ?? profileData;
+        final user = data['user'] ?? data;
 
-        // الاسم: جرب الحقل 'name' مباشرة، وإلا ركّب first_name + last_name
-        final firstName = data['first_name']?.toString().trim() ?? '';
-        final lastName = data['last_name']?.toString().trim() ?? '';
+        final firstName = user['first_name']?.toString().trim() ?? '';
+        final lastName = user['last_name']?.toString().trim() ?? '';
         final combinedName = [
           firstName,
           lastName,
         ].where((s) => s.isNotEmpty).join(' ');
 
-        if (data['name'] != null &&
-            data['name'].toString().trim().isNotEmpty) {
-          userName = data['name'];
+        if (user['name'] != null &&
+            user['name'].toString().trim().isNotEmpty) {
+          userName = user['name'];
         } else if (combinedName.isNotEmpty) {
           userName = combinedName;
         }
 
-        userEmail = data['email'] ?? userEmail;
+        userEmail = user['email'] ?? userEmail;
+        userPhone = user['phone']?.toString() ?? userPhone;
+        userDateOfBirth =
+            data['date_of_birth']?.toString() ?? userDateOfBirth;
 
-        // الصورة: جرب أكثر من اسم محتمل للحقل
-        userImage = data['image'] ??
-            data['photo'] ??
-            data['avatar'] ??
-            data['profile_image'] ??
+        userImage = user['image'] ??
+            user['photo'] ??
+            user['avatar'] ??
+            user['profile_image'] ??
             userImage;
 
         isLoadingData = false;
@@ -89,8 +94,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return FileImage(image);
     } else if (image is String && (image.startsWith('http://') || image.startsWith('https://'))) {
       return NetworkImage(image);
-    } else if (image is String && image.isNotEmpty) {
+    } else if (image is String && image.startsWith('assets/')) {
       return AssetImage(image);
+    } else if (image is String && image.isNotEmpty) {
+      return NetworkImage(Constants.resolveImageUrl(image));
     }
     return const AssetImage('assets/profile.png');
   }
@@ -127,8 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // طول ما البيانات لسا عم تنحمل من الباك اند، منعرض دائرة تحميل
-    // بنص الشاشة بس، وما منبني باقي محتوى الدرج إطلاقاً
     if (isLoadingData) {
       return Drawer(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -227,29 +232,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 children: [
                   ProfileItem(
-                    icon: Icons.edit,
-                    title: "Edit Profile",
-                    onTap: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProfilePage(
-                            name: userName,
-                            email: userEmail,
-                            image: userImage,
-                          ),
-                        ),
-                      );
-
-                      if (result != null) {
-                        setState(() {
-                          userName = result["name"];
-                          userEmail = result["email"];
-                          userImage = result["image"];
-                        });
-                      }
-                    },
-                  ),
+  icon: Icons.edit,
+  title: "Edit Profile",
+  onTap: () async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfilePage(
+          name: userName,
+          email: userEmail,
+          phone: userPhone,
+          dateOfBirth: userDateOfBirth,
+          image: userImage,
+        ),
+      ),
+    );
+    if (result != null) {
+      await _loadProfileData();
+    }
+  },
+),
                   ProfileItem(
                     icon: Icons.medical_information,
                     title: "Medical History",
