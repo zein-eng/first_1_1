@@ -1,15 +1,19 @@
+import 'package:first_1_1/patient/homepage_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:project_11/doctor/dental_chart_screen.dart';
-import 'package:project_11/patient/login_screen.dart';
-import 'package:project_11/splash/onboard_page.dart';
+import 'package:first_1_1/splash/onboard_page.dart';
+import 'package:first_1_1/patient/login_screen.dart';
+import 'package:first_1_1/splash/splash_page.dart';
+import 'package:first_1_1/constants.dart';
 
-void main() => runApp(
-  MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      fontFamily: "Roboto",
-      scaffoldBackgroundColor: const Color(0xFF0D1B3D),
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final bool isLoggedIn = await Constants.loadToken();
+
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: isLoggedIn ? const HomeScreen() : const OnboardPage(),
     ),
-    home: LoginScreen(),
-  ),
-);
+  );
+}

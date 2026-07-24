@@ -1,12 +1,14 @@
 import 'dart:io';
-import 'package:project_11/fullImage_screen.dart';
+import 'dart:typed_data';
+import 'package:first_1_1/fullImage_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:project_11/patient/login_screen.dart';
-import 'package:project_11/patient/edit_profile_page.dart';
-import 'package:project_11/patient/medical_history_page.dart';
-import 'package:project_11/patient/payment_page.dart';
+import 'package:first_1_1/constants.dart';
+import 'package:first_1_1/patient/login_screen.dart';
+import 'package:first_1_1/patient/edit_profile_page.dart';
+import 'package:first_1_1/patient/medical_history_page.dart';
+import 'package:first_1_1/patient/payment_page.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:project_11/patient/setting_page.dart';
+import 'package:first_1_1/patient/setting_page.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String name;
@@ -28,6 +30,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String userName;
   late String userEmail;
   dynamic userImage;
+  bool isLoggingOut = false;
+  bool isLoadingData = true;
 
   @override
   void initState() {
@@ -35,25 +39,126 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userName = widget.name;
     userEmail = widget.email;
     userImage = widget.image;
+
+   
+    _loadProfileData();
+  }
+  Future<void> _loadProfileData() async {
+    final profileData = await Constants.getProfile();
+
+    if (profileData != null && mounted) {
+      setState(() {
+        final data = profileData['data'] ?? profileData;
+
+        // الاسم: جرب الحقل 'name' مباشرة، وإلا ركّب first_name + last_name
+        final firstName = data['first_name']?.toString().trim() ?? '';
+        final lastName = data['last_name']?.toString().trim() ?? '';
+        final combinedName = [
+          firstName,
+          lastName,
+        ].where((s) => s.isNotEmpty).join(' ');
+
+        if (data['name'] != null &&
+            data['name'].toString().trim().isNotEmpty) {
+          userName = data['name'];
+        } else if (combinedName.isNotEmpty) {
+          userName = combinedName;
+        }
+
+        userEmail = data['email'] ?? userEmail;
+
+        // الصورة: جرب أكثر من اسم محتمل للحقل
+        userImage = data['image'] ??
+            data['photo'] ??
+            data['avatar'] ??
+            data['profile_image'] ??
+            userImage;
+
+        isLoadingData = false;
+      });
+    } else if (mounted) {
+      setState(() {
+        isLoadingData = false;
+      });
+    }
+  }
+  ImageProvider _buildImageProvider(dynamic image) {
+    if (image is Uint8List) {
+      return MemoryImage(image);
+    } else if (image is File) {
+      return FileImage(image);
+    } else if (image is String && (image.startsWith('http://') || image.startsWith('https://'))) {
+      return NetworkImage(image);
+    } else if (image is String && image.isNotEmpty) {
+      return AssetImage(image);
+    }
+    return const AssetImage('assets/profile.png');
+  }
+
+  Future<void> _handleLogout() async {
+    setState(() => isLoggingOut = true);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      await Constants.logout();
+    } catch (e) {
+      debugPrint("Logout error: $e");
+    } finally {
+      if (context.mounted) {
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      }
+
+      if (mounted) {
+        setState(() => isLoggingOut = false);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // طول ما البيانات لسا عم تنحمل من الباك اند، منعرض دائرة تحميل
+    // بنص الشاشة بس، وما منبني باقي محتوى الدرج إطلاقاً
+    if (isLoadingData) {
+      return Drawer(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        child: const Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF0D2F58),
+          ),
+        ),
+      );
+    }
+
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Drawer(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
       child: SafeArea(
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(top: 30, bottom: 30),
-
+              padding: const EdgeInsets.only(
+                top: 30,
+                bottom: 30,
+              ),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF0D2F58), Color(0xFF174A8B)],
+                  colors: [
+                    Color(0xFF0D2F58),
+                    Color(0xFF174A8B),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -62,7 +167,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   bottomRight: Radius.circular(40),
                 ),
               ),
-
               child: Column(
                 children: [
                   Container(
@@ -76,7 +180,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -87,39 +190,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       },
-
                       child: CircleAvatar(
                         radius: 50,
-                        backgroundImage: userImage is File
-                            ? FileImage(userImage)
-                            : NetworkImage(userImage) as ImageProvider,
+                        backgroundImage: _buildImageProvider(userImage),
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 15),
-
-                  Text(
-                    userName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    children: [
+                      Text(
+                        userName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        userEmail,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-
-                  const SizedBox(height: 6),
-
-                  Text(
-                    userEmail,
-                    style: const TextStyle(color: Colors.white70, fontSize: 16),
-                  ),
-
                   const SizedBox(height: 20),
                 ],
               ),
             ),
-
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
@@ -149,7 +250,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                     },
                   ),
-
                   ProfileItem(
                     icon: Icons.medical_information,
                     title: "Medical History",
@@ -162,7 +262,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-
                   ProfileItem(
                     icon: Icons.payments,
                     title: "Payments",
@@ -175,7 +274,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-
                   ProfileItem(
                     icon: Icons.settings,
                     title: "Settings",
@@ -188,7 +286,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-
                   ProfileItem(
                     icon: Icons.support_agent,
                     title: "Contact Developers",
@@ -201,21 +298,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       await launchUrl(phoneUri);
                     },
                   ),
-
                   ProfileItem(
                     icon: Icons.logout,
                     title: "Logout",
                     isLogout: true,
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
+                    onTap: isLoggingOut ? null : _handleLogout,
                   ),
-
                   const SizedBox(height: 10),
                 ],
               ),
@@ -254,21 +342,16 @@ class _ProfileItemState extends State<ProfileItem> {
 
     return GestureDetector(
       onTap: widget.onTap,
-
       onTapDown: (_) => setState(() => isPressed = true),
       onTapUp: (_) => setState(() => isPressed = false),
       onTapCancel: () => setState(() => isPressed = false),
-
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         margin: const EdgeInsets.only(bottom: 16),
-
         transform: Matrix4.identity()..scale(isPressed ? 0.97 : 1.0),
-
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(22),
-
           boxShadow: const [
             BoxShadow(
               color: Colors.black12,
@@ -277,39 +360,35 @@ class _ProfileItemState extends State<ProfileItem> {
             ),
           ],
         ),
-
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 18,
             vertical: 6,
           ),
-
           leading: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: const Color(0xFF0D2F58).withOpacity(0.1),
               borderRadius: BorderRadius.circular(14),
             ),
-
             child: Icon(
               widget.icon,
-              color: widget.isLogout ? Colors.red : const Color(0xFF0D2F58),
+              color: widget.isLogout
+                  ? Colors.red
+                  : const Color(0xFF0D2F58),
               size: 20,
             ),
           ),
-
           title: Text(
             widget.title,
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-
               color: widget.isLogout
                   ? Colors.red
                   : (isDark ? Colors.white : Colors.black87),
             ),
           ),
-
           trailing: Icon(
             Icons.arrow_forward_ios,
             size: 18,

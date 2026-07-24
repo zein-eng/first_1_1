@@ -1,4 +1,4 @@
-import 'package:project_11/patient/login_screen.dart';
+import 'package:first_1_1/patient/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class Casepage extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'homepage_screen.dart';
 import 'login_screen.dart';
-import 'package:project_11/constants.dart';
+import 'package:first_1_1/constants.dart';
 import 'package:dio/dio.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -70,7 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (mounted &&
           (response.statusCode == 200 || response.statusCode == 201)) {
         if (response.data != null && response.data['token'] != null) {
-          Constants.token = response.data['token'];
+          await Constants.saveToken(response.data['token']);
         }
 
         ScaffoldMessenger.of(context).showSnackBar(

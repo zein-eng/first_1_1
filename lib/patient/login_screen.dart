@@ -46,26 +46,29 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       return;
     }
+try {
+  Response response = await Constants.dio.post(
+    '${Constants.baseUrl}patient/login',
+    data: {
+      "email": _emailController.text,
+      "password": _passwordController.text,
+    },
+  );
 
-    try {
-      Response response = await Constants.dio.post(
-        '${Constants.baseUrl}patient/login',
-        data: {
-          "email": _emailController.text,
-          "password": _passwordController.text,
-        },
-      );
+  // Backend says login success
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    print('Login successful: ${response.data}');
 
-      // Backend says login success
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        print('Login successful: ${response.data}');
-        setState(() => isLoading = false);
+    // خزّن التوكن بالذاكرة وبالتخزين الدائم (SharedPreferences)
+    await Constants.saveToken(response.data['token']);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      } else {
+    setState(() => isLoading = false);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()),
+    );
+  }  else {
         // Backend responded but login failed (invalid credentials)
         setState(() => isLoading = false);
 
